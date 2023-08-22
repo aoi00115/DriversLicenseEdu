@@ -14183,6 +14183,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1306415104}
   - component: {fileID: 1306415105}
+  - component: {fileID: 1306415106}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -14218,6 +14219,39 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pivotPoint: {fileID: 0}
+--- !u!114 &1306415106
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1306415102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eae2acad1076f514cb4922582451bb90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 0
+  timer: 0
+  answer: 0
+  title: 1
+  stage1: 0
+  stage2: 0
+  stage3: 0
+  stage4: 0
+  correctChecker: 0
+  car: {fileID: 0}
+  pivotPoint: {fileID: 0}
+  postProcessingVolume: {fileID: 0}
+  chromaticAberration: {fileID: 0}
+  questionCG: {fileID: 0}
+  questionRT: {fileID: 0}
+  correctCG: {fileID: 0}
+  correctRT: {fileID: 0}
+  wrongCG: {fileID: 0}
+  wrongRT: {fileID: 0}
+  correctLocalPos: {x: 0, y: 0}
+  wrongLocalPos: {x: 0, y: 0}
 --- !u!1 &1309867900
 GameObject:
   m_ObjectHideFlags: 0
