@@ -8,38 +8,38 @@ using UnityEngine.SceneManagement;
 
 public class sceneManager : MonoBehaviour
 {
-    public static List<string> questionScenes = new List<string>(){
+    public static List<string> QuestionScenes = new List<string>(){
         "Q1",
         "Q2",
         "Q3",
     };
-    public Button selectButton;
-    private static int randomIndex;
-    private static string selectedSceneName;
+    public Button SelectButton;
+    private static int RandomIndex;
+    private static string SelectedSceneName;
 
 
     private void Update()
     {
-        foreach (string question in questionScenes)
+        foreach (string Question in QuestionScenes)
         {
-            Debug.Log(question);
+            Debug.Log(Question);
         }
     }
 
     public void SelectRandomScene()
     {
-        if (questionScenes.Count > 0)
+        if (QuestionScenes.Count > 0)
         {
-            randomIndex = Random.Range(0, questionScenes.Count);
-            selectedSceneName = questionScenes[randomIndex];
-            SceneManager.LoadScene(selectedSceneName);
+            RandomIndex = Random.Range(0, QuestionScenes.Count);
+            SelectedSceneName = QuestionScenes[RandomIndex];
+            SceneManager.LoadScene(SelectedSceneName);
 
         }
         else
         {
             SceneManager.LoadScene("res");
         }
-        questionScenes.RemoveAt(randomIndex);
+        QuestionScenes.RemoveAt(RandomIndex);
     }
 
 }
