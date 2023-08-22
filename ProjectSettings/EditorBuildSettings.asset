@@ -4,5 +4,17 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/3.Yuya/Scenes/Q1.unity
+    guid: f8605b7a9291b7d42af0331663063d8b
+  - enabled: 1
+    path: Assets/3.Yuya/Scenes/Q2.unity
+    guid: 809c981a0cad44bb3958a45e100397d4
+  - enabled: 1
+    path: Assets/3.Yuya/Scenes/Q3.unity
+    guid: 5b9ee7b0f4604468da81a769ea2e48b6
+  - enabled: 1
+    path: Assets/3.Yuya/Scenes/res.unity
+    guid: 4b21f8cd393ad4704ae356362b323d6e
   m_configObjects: {}
