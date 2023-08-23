@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
 {
     [Header("Settings")]
     public float speed = 0.0f;
-    public float timer = 0.0f;
+    public float timer = 0.0f;        // Timer that activates upon starting
 
     [Header("Stage Setting")]
     public bool answer; 
@@ -29,8 +29,11 @@ public class GameManager : MonoBehaviour
     bool isAnswered = false;
 
     [Header("Reference")]
+    Animator animator;
     public GameObject car;
     public GameObject pivotPoint;
+    public GameObject copCar;
+    public GameObject copCarLight;
     public PostProcessVolume postProcessingVolume;
     public ChromaticAberration chromaticAberration;
     public CanvasGroup questionCG;
@@ -41,6 +44,12 @@ public class GameManager : MonoBehaviour
     public RectTransform wrongRT;
     public Vector2 correctLocalPos;
     public Vector2 wrongLocalPos;
+    public CanvasGroup correctICG;
+    public RectTransform correctIRT;
+    public CanvasGroup wrongICG;
+    public RectTransform wrongIRT;
+
+    float postTimer = 0f;               // Timer that activates upon answering
 
     public static List<string> QuestionScenes = new List<string>(){
         "Stage1",
@@ -56,8 +65,16 @@ public class GameManager : MonoBehaviour
     {
         if(!title)
         {
+            animator = GameObject.Find("Car").GetComponent<Animator>();
             car = GameObject.Find("Car");
             pivotPoint = GameObject.Find("Car/PivotPoint");
+
+            if(stage1)
+            {                
+                copCar = GameObject.Find("CopCar");
+                copCarLight = GameObject.Find("CopCar/CopCar/Cube.001");
+                copCarLight.SetActive(false);
+            }
 
             questionCG = GameObject.Find("Canvas/Question").GetComponent<CanvasGroup>();
             questionRT = GameObject.Find("Canvas/Question").GetComponent<RectTransform>();
@@ -65,6 +82,10 @@ public class GameManager : MonoBehaviour
             correctRT = GameObject.Find("Canvas/Correct").GetComponent<RectTransform>();
             wrongCG = GameObject.Find("Canvas/Wrong").GetComponent<CanvasGroup>();
             wrongRT = GameObject.Find("Canvas/Wrong").GetComponent<RectTransform>();
+            correctICG = GameObject.Find("Canvas/CorrectIndicator").GetComponent<CanvasGroup>();
+            correctIRT = GameObject.Find("Canvas/CorrectIndicator").GetComponent<RectTransform>();
+            wrongICG = GameObject.Find("Canvas/WrongIndicator").GetComponent<CanvasGroup>();
+            wrongIRT = GameObject.Find("Canvas/WrongIndicator").GetComponent<RectTransform>();
             questionCG.alpha = 0f;
             correctCG.alpha = 0f;
             wrongCG.alpha = 0f;
@@ -85,7 +106,7 @@ public class GameManager : MonoBehaviour
         {
             timer += Time.deltaTime;
 
-            if(!isAnswered && timer > 3.25f)
+            if(!isAnswered && timer > 3.5f)
             {
                 // Checing if the user input is correct
                 if(Input.GetKeyDown(KeyCode.O))
@@ -102,6 +123,11 @@ public class GameManager : MonoBehaviour
                     isAnswered = true;
                     PromptFadeOut();
                 }
+            }
+
+            if(isAnswered)  // Set the timer after the answer for the 
+            {              
+                postTimer += Time.deltaTime;
             }
         }
         else
@@ -120,6 +146,7 @@ public class GameManager : MonoBehaviour
         // {
         //     Debug.Log(Question);
         // }
+        Debug.Log(scoreCounter);
     }
 
     void FixedUpdate()
@@ -137,12 +164,14 @@ public class GameManager : MonoBehaviour
             {
                 if(correctChecker == answer)    // Play the correct animation
                 {
+                    CorrectWrongTextAnimation();
                     CorrectAnimation();       
                     scoreCounter++;
                 }
                 else                            // Play the wrong animation
                 {
-                    WrongAnimation();           
+                    WrongAnimation();
+                    CorrectWrongTextAnimation();
                 }
                 Invoke("SelectRandomScene", 5.0f); // Changing the scene and resetting everything
             }
@@ -201,7 +230,27 @@ public class GameManager : MonoBehaviour
     {
         if(stage1)
         {
+            if(car.transform.position.z <= -1.33510f)
+            {
+                speed = 3.0f;
+                car.transform.position += new Vector3(0, 0, speed * Time.deltaTime);
+            }
+            else
+            {
+                animator.enabled = true;
+                animator.SetBool("isPlaying", true);
+                copCarLight.SetActive(true);
+                // copCar.transform.position = new Vector3(2.94000006f, 0.00600000005f, 44.2999992f);
 
+                if(postTimer > 0.8f)
+                {
+                    Debug.Log("Cops Aproaching");
+                    if(copCar.transform.position.z >= 4.4f)
+                    {
+                        copCar.transform.position -= new Vector3(0, 0, 20 * Time.deltaTime);
+                    }
+                }
+            }
         }
         if(stage2)
         {
@@ -261,6 +310,27 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    void CorrectWrongTextAnimation()
+    {
+        if(correctChecker == answer)
+        {
+            Debug.Log("CorrectPlayed");
+            correctIRT.transform.localScale = new Vector3(2f, 2f, 2f);
+            correctIRT.transform.DOScale(new Vector3(1f, 1f, 1f), 0.25f).SetEase(Ease.OutSine);
+            correctICG.DOFade(1, 0.1f).SetEase(Ease.OutSine);
+        }
+        else
+        {           
+            if(postTimer > 2f)
+            {
+                Debug.Log("WrongPlayed");
+                wrongIRT.transform.localScale = new Vector3(2f, 2f, 2f);
+                wrongIRT.transform.DOScale(new Vector3(1f, 1f, 1f), 0.25f).SetEase(Ease.OutSine);
+                wrongICG.DOFade(1, 0.1f).SetEase(Ease.OutSine);
+            }
+        }
+    }
+
     public void SelectRandomScene()
     {
         if (QuestionScenes.Count > 0)
@@ -273,8 +343,17 @@ public class GameManager : MonoBehaviour
         else
         {
             Debug.Log("Show Result");
+            // ResultScreen();
         }
         isAnswered = false;
         timer = 0;
     }
+
+    // public void ResultScreen()
+    // {
+
+    //     resultText.SetActive(true);
+    //     scoreText.text = "/ 4";
+    //     replayPrompt.SetActive(true);
+    // }
 }
